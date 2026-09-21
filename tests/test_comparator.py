@@ -1,4 +1,8 @@
-from pdf_diff_checker.comparator import create_text_diff, find_different_pages
+from pdf_diff_checker.comparator import (
+    compare_pages,
+    create_text_diff,
+    find_different_pages,
+)
 
 
 def test_find_different_pages():
@@ -76,3 +80,28 @@ def test_create_text_diff():
 
     assert "-価格：1,000円" in diff
     assert "+価格：1,200円" in diff
+
+def test_compare_pages():
+    before_pages = [
+        "Page 1",
+        "Price: 1,000 yen",
+    ]
+
+    after_pages = [
+        "Page 1",
+        "Price: 1,200 yen",
+        "Page 3",
+    ]
+
+    differences = compare_pages(before_pages, after_pages)
+
+    assert len(differences) == 2
+
+    page_number, diff = differences[0]
+    assert page_number == 2
+    assert "-Price: 1,000 yen" in diff
+    assert "+Price: 1,200 yen" in diff
+
+    page_number, diff = differences[1]
+    assert page_number == 3
+    assert "+Page 3" in diff

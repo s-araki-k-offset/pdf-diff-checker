@@ -29,3 +29,21 @@ def create_text_diff(before: str, after: str) -> list[str]:
             lineterm="",
         )
     )
+
+def compare_pages(
+    before_pages: list[str],
+    after_pages: list[str],
+) -> list[tuple[int, list[str]]]:
+    """Return text differences for each changed page."""
+    differences = []
+
+    for page_number, (before, after) in enumerate(
+        zip_longest(before_pages, after_pages, fillvalue=""),
+        start=1,
+    ):
+        diff = create_text_diff(before, after)
+
+        if diff:
+            differences.append((page_number, diff))
+
+    return differences

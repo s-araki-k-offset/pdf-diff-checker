@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
 
-from pdf_diff_checker.comparator import create_text_diff
+from pdf_diff_checker.comparator import compare_pages
 from pdf_diff_checker.extractor import extract_text
 
 
@@ -17,15 +17,9 @@ def main():
     before_pages = extract_text(args.before)
     after_pages = extract_text(args.after)
 
-    for page_number, (before, after) in enumerate(
-        zip(before_pages, after_pages),
-        start=1,
-    ):
-        diff = create_text_diff(before, after)
-
-        if diff:
-            print(f"\n--- Page {page_number} ---")
-            print("\n".join(diff))
+    for page_number, diff in compare_pages(before_pages, after_pages):
+        print(f"\n--- Page {page_number} ---")
+        print("\n".join(diff))
 
 
 if __name__ == "__main__":
