@@ -1,3 +1,4 @@
+from difflib import unified_diff
 from itertools import zip_longest
 
 
@@ -16,3 +17,15 @@ def find_different_pages(
             different_pages.append(page_number)
 
     return different_pages
+
+def create_text_diff(before: str, after: str) -> list[str]:
+    """Return line-by-line differences between two texts."""
+    return list(
+        unified_diff(
+            before.splitlines(),
+            after.splitlines(),
+            fromfile="before",
+            tofile="after",
+            lineterm="",
+        )
+    )

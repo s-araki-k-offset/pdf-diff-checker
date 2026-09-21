@@ -1,4 +1,4 @@
-from pdf_diff_checker.comparator import find_different_pages
+from pdf_diff_checker.comparator import create_text_diff, find_different_pages
 
 
 def test_find_different_pages():
@@ -62,3 +62,17 @@ def test_find_different_pages_when_page_is_removed():
     different_pages = find_different_pages(before_pages, after_pages)
 
     assert different_pages == [3]
+
+def test_create_text_diff():
+    before = """商品名：サンプル商品A
+価格：1,000円
+発売日：2026年9月21日"""
+
+    after = """商品名：サンプル商品A
+価格：1,200円
+発売日：2026年9月21日"""
+
+    diff = create_text_diff(before, after)
+
+    assert "-価格：1,000円" in diff
+    assert "+価格：1,200円" in diff
